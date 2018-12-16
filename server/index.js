@@ -1,4 +1,6 @@
-const { GraphQLServer } = require('graphql-yoga')
+const {
+    GraphQLServer
+} = require('graphql-yoga')
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/test');
@@ -27,27 +29,44 @@ const typeDefs = `
 
 const resolvers = {
     Query: {
-        hello: (_, { name }) => `Hello ${name || 'World'}`,
+        hello: (_, {
+            name
+        }) => `Hello ${name || 'World'}`,
         todos: () => Todo.find()
     },
     Mutation: {
-        createTodo: async(_, { text }) => {
-            const todo = new Todo({ text, complete: false });
+        createTodo: async(_, {
+            text
+        }) => {
+            const todo = new Todo({
+                text,
+                complete: false
+            });
             await todo.save();
             return todo;
         },
-        updateTodo: async(_, { id, complete }) => {
-            await Todo.findByIdAndUpdate(id, { complete });
+        updateTodo: async(_, {
+            id,
+            complete
+        }) => {
+            await Todo.findByIdAndUpdate(id, {
+                complete
+            });
             return true;
         },
-        removeTodo: async(_, { id }) => {
+        removeTodo: async(_, {
+            id
+        }) => {
             await Todo.findByIdAndRemove(id);
             return true;
         }
     }
 };
 
-const server = new GraphQLServer({ typeDefs, resolvers })
+const server = new GraphQLServer({
+    typeDefs,
+    resolvers
+})
 mongoose.connection.once('open', function() {
     server.start(() => console.log('Server is running on localhost:4000'));
 });
